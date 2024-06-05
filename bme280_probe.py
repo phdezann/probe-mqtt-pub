@@ -9,12 +9,13 @@ from tcping import Ping
 
 
 class Bme280Probe:
-    def __init__(self, args, pub_bw9q48, pub_ki8q49, pub_p5p77r, pub_n5lth1):
+    def __init__(self, args, pub_bw9q48, pub_ki8q49, pub_p5p77r, pub_n5lth1, pub_e9cd9k):
         self.args = args
         self.pub_bw9q48 = pub_bw9q48
         self.pub_ki8q49 = pub_ki8q49
         self.pub_p5p77r = pub_p5p77r
         self.pub_n5lth1 = pub_n5lth1
+        self.pub_e9cd9k = pub_e9cd9k
         self.active = True
 
     def is_active(self):
@@ -33,6 +34,7 @@ class Bme280Probe:
         self.run("mosquito", "read_bme280", self.pub_ki8q49, lambda lines_out: self.parse_read_bme280(lines_out))
         self.run("fly", "python3 /opt/pi/dotfiles.py/src/sysinfo.py", self.pub_p5p77r, lambda lines_out: lines_out[0])
         self.run("mosquito", "python3 /opt/pi/dotfiles.py/src/sysinfo.py", self.pub_n5lth1, lambda lines_out: lines_out[0])
+        self.run("bee", "python3 /opt/pi/dotfiles.py/src/sysinfo.py", self.pub_e9cd9k, lambda lines_out: lines_out[0])
 
     def build_command(self, probe_hostname, cmd):
         args = cmd.split(" ")
