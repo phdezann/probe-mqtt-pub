@@ -9,7 +9,7 @@ from tcping import Ping
 
 
 class Bme280Probe:
-    def __init__(self, args, pub_bw9q48, pub_ki8q49, pub_p5p77r, pub_n5lth1, pub_e9cd9k, pub_x2h7dr):
+    def __init__(self, args, pub_bw9q48, pub_ki8q49, pub_p5p77r, pub_n5lth1, pub_e9cd9k, pub_x2h7dr, pub_x4i8kf):
         self.args = args
         self.pub_bw9q48 = pub_bw9q48
         self.pub_ki8q49 = pub_ki8q49
@@ -17,6 +17,7 @@ class Bme280Probe:
         self.pub_n5lth1 = pub_n5lth1
         self.pub_e9cd9k = pub_e9cd9k
         self.pub_x2h7dr = pub_x2h7dr
+        self.pub_x4i8kf = pub_x4i8kf
         self.active = True
 
     def is_active(self):
@@ -37,6 +38,7 @@ class Bme280Probe:
         self.run("mosquito", "python3 /opt/pi/dotfiles.py/src/sysinfo.py", self.pub_n5lth1, lambda lines_out: lines_out[0])
         self.run("bee", "python3 /opt/pi/dotfiles.py/src/sysinfo.py", self.pub_e9cd9k, lambda lines_out: lines_out[0])
         self.run("retropie", "python3 /opt/pi/dotfiles.py/src/sysinfo.py", self.pub_x2h7dr, lambda lines_out: lines_out[0])
+        self.run("gannet-vm", "python3 /opt/ph_dezanneau/dotfiles.py/src/sysinfo.py", self.pub_x4i8kf, lambda lines_out: lines_out[0])
 
     def build_command(self, probe_hostname, cmd):
         args = cmd.split(" ")
@@ -59,7 +61,10 @@ class Bme280Probe:
     def run(self, probe_hostname, cmd, pub, parser):
         try:
             logging.warning("Pinging '" + probe_hostname + "'")
-            ping = Ping(probe_hostname, 22)
+            if probe_hostname == "gannet-vm":
+                ping = Ping("gannet-vm.phdezanneau.dev", 22)
+            else:
+                ping = Ping(probe_hostname, 22)
             ping.ping(3)
         except Exception:
             logging.warning("Cannot ping '" + probe_hostname + "', aborting.")
