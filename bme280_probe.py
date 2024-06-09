@@ -8,7 +8,7 @@ import time
 
 
 class Bme280Probe:
-    def __init__(self, args, pub_bw9q48, pub_ki8q49, pub_p5p77r, pub_n5lth1, pub_e9cd9k, pub_x2h7dr, pub_x4i8kf):
+    def __init__(self, args, pub_bw9q48, pub_ki8q49, pub_p5p77r, pub_n5lth1, pub_e9cd9k, pub_x2h7dr, pub_x4i8kf, pub_lr24ye):
         self.args = args
         self.pub_bw9q48 = pub_bw9q48
         self.pub_ki8q49 = pub_ki8q49
@@ -17,6 +17,7 @@ class Bme280Probe:
         self.pub_e9cd9k = pub_e9cd9k
         self.pub_x2h7dr = pub_x2h7dr
         self.pub_x4i8kf = pub_x4i8kf
+        self.pub_lr24ye = pub_lr24ye
         self.active = True
 
     def is_active(self):
@@ -38,6 +39,7 @@ class Bme280Probe:
         self.run("bee", "python3 /opt/pi/dotfiles.py/src/sysinfo.py", self.pub_e9cd9k, lambda lines_out: lines_out[0])
         self.run("retropie", "python3 /opt/pi/dotfiles.py/src/sysinfo.py", self.pub_x2h7dr, lambda lines_out: lines_out[0])
         self.run("gannet-vm", "python3 /opt/ph_dezanneau/dotfiles.py/src/sysinfo.py", self.pub_x4i8kf, lambda lines_out: lines_out[0])
+        self.run("elephant-vm", "python3 /opt/ph_dezanneau/dotfiles.py/src/sysinfo.py", self.pub_lr24ye, lambda lines_out: lines_out[0])
 
     def build_command(self, probe_hostname, cmd):
         args = cmd.split(" ")
@@ -60,6 +62,8 @@ class Bme280Probe:
     def __get_ping_hostname(self, hostname):
         if hostname == "gannet-vm":
             return "gannet-vm.phdezanneau.dev"
+        if hostname == "elephant-vm":
+            return "elephant-vm.phdezanneau.dev"
         return hostname
 
     def __is_port_open(self, ip, port):

@@ -26,6 +26,7 @@ def main():
     pub_e9cd9k = MqttPub(monitor, args.mqtt_hostname, args.mqtt_port, "sysinfo/probe_E9CD9K/SENSOR", 2)
     pub_x2h7dr = MqttPub(monitor, args.mqtt_hostname, args.mqtt_port, "sysinfo/probe_X2H7DR/SENSOR", 2)
     pub_x4i8kf = MqttPub(monitor, args.mqtt_hostname, args.mqtt_port, "sysinfo/probe_X4I8KF/SENSOR", 2)
+    pub_lr24ye = MqttPub(monitor, args.mqtt_hostname, args.mqtt_port, "sysinfo/probe_LR24YE/SENSOR", 2)
 
     pub_bw9q48.start()
     pub_ki8q49.start()
@@ -34,9 +35,10 @@ def main():
     pub_e9cd9k.start()
     pub_x2h7dr.start()
     pub_x4i8kf.start()
+    pub_lr24ye.start()
 
     logging.info("Mqtt publishers are now ready")
-    bme280_probe = Bme280Probe(args, pub_bw9q48, pub_ki8q49, pub_p5p77r, pub_n5lth1, pub_e9cd9k, pub_x2h7dr, pub_x4i8kf)
+    bme280_probe = Bme280Probe(args, pub_bw9q48, pub_ki8q49, pub_p5p77r, pub_n5lth1, pub_e9cd9k, pub_x2h7dr, pub_x4i8kf, pub_lr24ye)
     monitor.register_client(bme280_probe)
     bme280_probe.start_reading()
 
