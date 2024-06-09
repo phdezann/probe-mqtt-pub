@@ -2,7 +2,7 @@
 
 set -e -u -x
 
-python3 -m pip install paho-mqtt tcping
+python3 -m pip install paho-mqtt
 
 python3 main.py \
   --mqtt-hostname="${MQTT_HOSTNAME}" \

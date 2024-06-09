@@ -5,7 +5,6 @@ import socket
 import subprocess
 import threading
 import time
-from tcping import Ping
 
 
 class Bme280Probe:
@@ -58,16 +57,28 @@ class Bme280Probe:
         values['temperature'] = temperature
         return json.dumps(values)
 
-    def run(self, probe_hostname, cmd, pub, parser):
+    def __get_ping_hostname(self, hostname):
+        if hostname == "gannet-vm":
+            return "gannet-vm.phdezanneau.dev"
+        return hostname
+
+    def __is_port_open(self, ip, port):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(5)
         try:
-            logging.warning("Pinging '" + probe_hostname + "'")
-            if probe_hostname == "gannet-vm":
-                ping = Ping("gannet-vm.phdezanneau.dev", 22)
-            else:
-                ping = Ping(probe_hostname, 22)
-            ping.ping(3)
+            is_open = s.connect_ex((ip, int(port))) == 0
+            if is_open:
+                s.shutdown(socket.SHUT_RDWR)
         except Exception:
-            logging.warning("Cannot ping '" + probe_hostname + "', aborting.")
+            is_open = False
+        s.close()
+        return is_open
+
+    def run(self, probe_hostname, cmd, pub, parser):
+        ping_hostname = self.__get_ping_hostname(probe_hostname)
+        logging.info("Pinging '%s'", ping_hostname)
+        if not self.__is_port_open(ping_hostname, 22):
+            logging.warning("Cannot ping '%s', aborting.", ping_hostname)
             return
 
         command = self.build_command(probe_hostname, cmd)
@@ -81,12 +92,13 @@ class Bme280Probe:
         lines_err = process.stderr.readlines()
 
         if len(lines_out) == 0 or len(lines_err) > 0:
-            logging.info("Got on stdout: " + str(lines_out))
-            logging.info("Got on stderr: " + str(lines_err))
+            logging.info("Got on stdout: %s", lines_out)
+            logging.info("Got on stderr: %s", lines_err)
             return
 
         json_payload = parser(lines_out)
         pub.publish(json_payload)
+        logging.info("Data published for '%s'", probe_hostname)
 
     def read(self):
         try:

@@ -3,11 +3,14 @@ import sys
 from argparse import ArgumentParser
 
 from bme280_probe import Bme280Probe
+from logger import configure_logger
 from mqtt.mqtt_monitor import MqttClientMonitor, TerminationStatus
 from mqtt.mqtt_pub import MqttPub
 
 
 def main():
+    configure_logger(logging.INFO)
+
     parser = ArgumentParser()
     parser.add_argument("--mqtt-hostname")
     parser.add_argument("--mqtt-port", type=int)
@@ -47,5 +50,4 @@ def main():
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
     main()
