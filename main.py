@@ -42,8 +42,8 @@ def main():
     monitor.register_client(bme280_probe)
     bme280_probe.start_reading()
 
-    status = monitor.wait_for_termination()
-    termination_status = monitor.close_all_clients(status)
+    termination_status = monitor.wait_for_termination()
+    monitor.close_all_clients(termination_status)
 
     if termination_status == TerminationStatus.NORMAL_TERMINATION:
         sys.exit(0)
