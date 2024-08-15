@@ -1,0 +1,1 @@
+This project collects data through ssh commands and publishes it to mqtt. 
