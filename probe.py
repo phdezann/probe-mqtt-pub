@@ -7,7 +7,7 @@ import threading
 import time
 
 
-class Bme280Probe:
+class Probe:
     def __init__(self, args, pub_bw9q48, pub_ki8q49, pub_p5p77r, pub_n5lth1, pub_e9cd9k, pub_x2h7dr, pub_x4i8kf, pub_lr24ye):
         self.args = args
         self.pub_bw9q48 = pub_bw9q48

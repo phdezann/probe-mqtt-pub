@@ -2,7 +2,7 @@ import logging
 import sys
 from argparse import ArgumentParser
 
-from bme280_probe import Bme280Probe
+from probe import Probe
 from logger import configure_logger
 from mqtt.mqtt_monitor import MqttClientMonitor, TerminationStatus
 from mqtt.mqtt_pub import MqttPub
@@ -38,9 +38,9 @@ def main():
     pub_lr24ye.start()
 
     logging.info("Mqtt publishers are now ready")
-    bme280_probe = Bme280Probe(args, pub_bw9q48, pub_ki8q49, pub_p5p77r, pub_n5lth1, pub_e9cd9k, pub_x2h7dr, pub_x4i8kf, pub_lr24ye)
-    monitor.register_client(bme280_probe)
-    bme280_probe.start_reading()
+    probe = Probe(args, pub_bw9q48, pub_ki8q49, pub_p5p77r, pub_n5lth1, pub_e9cd9k, pub_x2h7dr, pub_x4i8kf, pub_lr24ye)
+    monitor.register_client(probe)
+    probe.start_reading()
 
     termination_status = monitor.wait_for_termination()
     monitor.close_all_clients(termination_status)
